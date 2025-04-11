@@ -1,0 +1,3 @@
+# python-telegram-bot Para interactuar con lsa API de Telegram
+# python-dotenv Para manejar variables de entorno
+# requests Para hacer peticiones HTTP si se agregan funcionalidades extras en el futuro
