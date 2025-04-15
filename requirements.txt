@@ -9,4 +9,3 @@
 # pandas Para manejar datos en forma de tablas
 # scikit-learn Para preprocesar datos y evaluar modelos de IA
 # nlkt Para el procesamiento de lenguaje natural (NLP)
-#scikit-learn Para crear y evaluar modelos de IA
