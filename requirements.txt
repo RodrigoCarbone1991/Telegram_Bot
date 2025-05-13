@@ -6,7 +6,10 @@ numpy==1.19.5
 pandas==1.3.3   
 scikit-learn==0.24.2
 nltk==3.6.3
-python
+joblib
+dotenv
+telegram
+
 
 #PARA CREAR EL BOT Y ENVIAR MENSAJES
 # python-telegram-bot Para interactuar con la API de Telegram
