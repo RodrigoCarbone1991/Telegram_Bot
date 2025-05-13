@@ -3,8 +3,9 @@ import re
 import joblib
 import unicodedata
 from dotenv import load_dotenv
-from telegram import Update, Bot
+from telegram import Bot
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
+from telegram import Update
 from logger import setup_logger
 
 # Cargar modelo y vectorizador
@@ -42,13 +43,13 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         pregunta = update.message.text
         respuesta = obtener_respuesta(pregunta)
-        await update.message.reply_text(f"💬 {respuesta}")
+        await update.message.reply_text(f" {respuesta}")
     except Exception as e:
         logger.error(f"Error al responder: {e}")
         await update.message.reply_text("Ocurrió un error al procesar tu mensaje.")
 
-# --- Función principal ---
 
+# --- Función principal corregida para entornos con loop activo ---
 async def main():
     app = ApplicationBuilder().token(telegram_bot_token).build()
 
@@ -56,9 +57,23 @@ async def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder))
 
     print("🤖 Bot en funcionamiento...")
-    await app.run_polling()
+
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+
 
 # Ejecutar
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(main())
+
+    async def safe_main():
+        await main()
+        # Mantenemos el bot activo
+        await asyncio.Event().wait()
+
+    try:
+        asyncio.get_event_loop().run_until_complete(safe_main())
+    except KeyboardInterrupt:
+        print("🔴 Bot detenido manualmente.")
+
