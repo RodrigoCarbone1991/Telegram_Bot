@@ -28,7 +28,7 @@ async def send_message():
         user_id = 1076844476
 
         # Mensaje a enviar
-        message = "Hola Rodri, yo soy vos"
+        message = "Hola Rodri, de nuevo"
 
         # Enviar mensaje y confirmar éxito
         await bot.send_message(chat_id=user_id, text=message)
