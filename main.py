@@ -8,21 +8,16 @@ from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filte
 from telegram import Update
 from logger import setup_logger
 
-# Cargar modelo y vectorizador
 modelo = joblib.load("modelo/modelo_entrenado.pkl")
 vectorizer = joblib.load("modelo/vectorizer.pkl")
 
-# Configurar logger
 logger = setup_logger()
 
-# Cargar variables de entorno
 load_dotenv()
 telegram_bot_token = os.getenv("telegram_bot_token")
 
 if not telegram_bot_token:
     raise ValueError("No se encontró el token en el archivo .env")
-
-# --- Funciones auxiliares ---
 
 def limpiar_texto(texto):
     texto = texto.lower()
@@ -37,7 +32,6 @@ def obtener_respuesta(pregunta_usuario):
     respuesta = modelo.predict(pregunta_vectorizada)
     return respuesta[0]
 
-# --- Handler de mensajes ---
 
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
@@ -58,27 +52,18 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Si te digo que se cayo el sistema, me crees? jaja😂.")
 
 
-# --- Función principal corregida para entornos con loop activo ---
 async def main():
     app = ApplicationBuilder().token(telegram_bot_token).build()
-
-    # Manejador para todos los mensajes de texto
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder))
-
     print("🤖 Bot en funcionamiento...")
-
     await app.initialize()
     await app.start()
     await app.updater.start_polling()
 
-
-# Ejecutar
 if __name__ == "__main__":
     import asyncio
-
     async def safe_main():
         await main()
-        # Mantenemos el bot activo
         await asyncio.Event().wait()
 
     try:
