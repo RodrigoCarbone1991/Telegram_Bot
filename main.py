@@ -42,14 +42,17 @@ def obtener_respuesta(pregunta_usuario):
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         pregunta = update.message.text
-        if not pregunta or not pregunta.strip():
-            await update.message.reply_text("Quizas quiciste decir decir algo o fue solo un suspiro😮‍💨.")
+        # Limpiar mensaje
+        mensaje_limpio = limpiar_texto(pregunta)
+        # Validar si el mensaje contiene solo caracteres especiales, números o está vacío
+        if not any(c.isalnum() for c in mensaje_limpio):  # No tiene letras o números
+            await update.message.reply_text("Por ahi quisiste decir otra cosa o no entendi🧐, lo escribis de nuevo?.")
             return
         respuesta = obtener_respuesta(pregunta)
         await update.message.reply_text(f" {respuesta}")
     except Exception as e:
         logger.error(f"Error al responder: {e}")
-        await update.message.reply_text("🖥️Si te digo que se cayo el sistema, me crees? jaja.")
+        await update.message.reply_text("Si te digo que se cayo el sistema, me crees? jaja😂.")
 
 
 # --- Función principal corregida para entornos con loop activo ---
