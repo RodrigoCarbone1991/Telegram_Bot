@@ -42,11 +42,14 @@ def obtener_respuesta(pregunta_usuario):
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         pregunta = update.message.text
+        if not pregunta or not pregunta.strip():
+            await update.message.reply_text("Quizas quiciste decir decir algo o fue solo un suspiro😮‍💨.")
+            return
         respuesta = obtener_respuesta(pregunta)
         await update.message.reply_text(f" {respuesta}")
     except Exception as e:
         logger.error(f"Error al responder: {e}")
-        await update.message.reply_text("Ocurrió un error al procesar tu mensaje.")
+        await update.message.reply_text("🖥️Si te digo que se cayo el sistema, me crees? jaja.")
 
 
 # --- Función principal corregida para entornos con loop activo ---
