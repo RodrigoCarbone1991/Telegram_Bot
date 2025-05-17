@@ -44,8 +44,11 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pregunta = update.message.text
         # Limpiar mensaje
         mensaje_limpio = limpiar_texto(pregunta)
-        # Validar si el mensaje contiene solo caracteres especiales, números o está vacío
-        if not any(c.isalnum() for c in mensaje_limpio):  # No tiene letras o números
+        #Reglas de validacion
+        es_muy_corto = len(mensaje_limpio) < 2
+        solo_una_letra_o_numero = mensaje_limpio.isalnum() and len(mensaje_limpio) == 1
+        contiene_palabras = any(c.isalpha() for c in mensaje_limpio) and len(mensaje_limpio.split()) >= 1
+        if es_muy_corto or solo_una_letra_o_numero or not contiene_palabras:
             await update.message.reply_text("Por ahi quisiste decir otra cosa o no entendi🧐, lo escribis de nuevo?.")
             return
         respuesta = obtener_respuesta(pregunta)
